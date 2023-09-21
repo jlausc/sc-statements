@@ -1,13 +1,12 @@
 import { get } from "svelte/store";
 import { errorMessages, type ErrorData } from "../../stores/ErrorMessage";
 
-export function handleError(ev: ErrorEvent) {
+export function handleError(ev?: ErrorEvent, message?: string) {
+  const errorMessage = message ? message : ev?.message.split(":")[1];
+
   const newError: ErrorData = {
-    msg: ev.message.split(":")[1],
+    msg: errorMessage ? errorMessage : "Unknown Error",
     show: true,
   };
-  console.log("ORIG", ev, ev.message);
-  console.log("split msg", newError.msg);
-  // const errList = get(errorMessages);
   errorMessages.append(newError);
 }

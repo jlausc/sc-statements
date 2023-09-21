@@ -20,11 +20,9 @@ export function onDecrypt(ciphertext: string, password: string) {
       const cipher = decryptData(ciphertext, password);
       result = cipher;
     } catch (x) {
-      console.log("enc x", x);
       throw x;
     }
   } catch (e) {
-    console.log("enc e", e);
     throw e;
   }
 

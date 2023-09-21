@@ -7,7 +7,6 @@
 
   onMount(() => {
     window.addEventListener("error", handleError, true);
-    throw new Error("TEST");
   });
 
   onDestroy(() => {
@@ -20,10 +19,3 @@
   <Content />
   <BottomNav />
 </main>
-
-<style>
-  P {
-    min-width: 35px;
-    min-height: 35px;
-  }
-</style>

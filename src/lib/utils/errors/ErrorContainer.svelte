@@ -1,10 +1,6 @@
 <script lang="ts">
-  import { errorMessages, type ErrorData } from "../../stores/ErrorMessage";
+  import { errorMessages } from "../../stores/ErrorMessage";
   import ErrorToast from "../errors/ErrorToast.svelte";
-
-  $: {
-    console.log($errorMessages);
-  }
 </script>
 
 <div class="toast toast-top toast-end">
