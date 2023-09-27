@@ -3,6 +3,7 @@
   import Modal from "../utils/modal/Modal.svelte";
   export let data: string;
   export let key: string;
+  export let row: any = undefined;
 
   let waiting = false;
   let timeout: number = 0;
@@ -43,13 +44,13 @@
 <div class="cell" on:click={handleClickType}>
   <Tooltip title={tooltip}>
     <div class="data">
-      <button class="capitalize">
+      <button>
         {data}
       </button>
     </div>
   </Tooltip>
 
-  <Modal bind:show={showModal} {data} {key} />
+  <Modal bind:show={showModal} {data} {key} {row} />
 </div>
 
 <style>

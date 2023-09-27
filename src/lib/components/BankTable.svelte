@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import {
     cursor,
     filter,
@@ -6,50 +7,9 @@
     output,
     pageSize,
   } from "../stores/FileData";
-  import AutoClipboard from "../utils/clipboard/AutoClipboard.svelte";
-  import Clipboard from "../utils/clipboard/Clipboard.svelte";
-  import Modal from "../utils/modal/Modal.svelte";
+  import { parseCustomHeader } from "../utils/unwantedHeaders";
+
   import CellData from "./CellData.svelte";
-
-  const unwantedHeaders = [
-    "BankABA",
-    // "BankAccount",
-    "wdmax",
-    "ACHType",
-    "maxamount",
-    "minamount",
-    "savings_formula",
-    "wdcount",
-    "csvscript",
-    "wireaccount",
-    "wireaba",
-    "wireinstructions2",
-    "wireinstructions3",
-    "wireinstructions4",
-    "wireinstructions",
-    "program",
-    "IsMoneyCenter",
-    "Entity",
-    "ThirdPartyFee",
-    "IntuitTier",
-    "IntuitWorking",
-    "insuranceType",
-    "item",
-    "max_savings_rate",
-    "macro",
-    "RecFile",
-    "vard1",
-    "vard2",
-    "var1",
-    "recerror",
-    "lastdownload",
-    "ofxmacro",
-    // "vars", // sec pws
-
-    "Approved",
-    "Active",
-    "lastdateactive",
-  ];
 </script>
 
 <div class="container">
@@ -57,12 +17,12 @@
     <div class="row">
       {#if $headers.length}
         {#each $headers as header}
-          {#if !unwantedHeaders.includes(header)}
+          {#if parseCustomHeader(header, $output[0])}
             <button
               class="cell-header"
               on:click={() => {
                 navigator.clipboard.writeText(header);
-              }}>{header}</button
+              }}>{parseCustomHeader(header, $output[0])}</button
             >
           {/if}
         {/each}
@@ -71,26 +31,17 @@
   </div>
   <div class="body">
     {#if $output.length}
-      {#each $output.slice($cursor * $pageSize, $cursor * $pageSize + $pageSize) as row}
-        {#if $filter}
-          {#if $filter == row["FDICCert"]}
-            <div class="row">
-              {#each Object.keys(row) as key}
-                {#if !unwantedHeaders.includes(key)}
-                  <CellData data={row[key]} {key} />
-                {/if}
-              {/each}
-            </div>
-          {/if}
-        {:else if !$filter}
-          <div class="row">
-            {#each Object.keys(row) as key}
-              {#if !unwantedHeaders.includes(key)}
-                <CellData data={row[key]} {key} />
-              {/if}
-            {/each}
-          </div>
-        {/if}
+      {#each $filter ? $output.filter((v) => {
+            console.log(v);
+            return v["FDICCert"].includes($filter) || v["BankAccount"].includes($filter);
+          }) : $output.slice($cursor * $pageSize, $cursor * $pageSize + $pageSize) as row}
+        <div class="row">
+          {#each $headers as key}
+            {#if !key.includes("vard")}
+              <CellData data={row[key]} {key} {row} />
+            {/if}
+          {/each}
+        </div>
       {/each}
     {/if}
   </div>
@@ -103,9 +54,9 @@
     border: 1px solid grey;
     display: block;
     overflow: scroll;
-    --cell-width: 140px;
+    --cell-width: 180px;
     --cell-height: 60px;
-    --header-width: 140px;
+    --header-width: 180px;
     --header-height: 30px;
   }
 

@@ -51,5 +51,5 @@
     </button>
   </div>
   <button class="btn mx-2" on:click={decrypt}>Decrypt</button>
-  <button class="btn mx-2" on:click={encrypt}>Encrypt</button>
+  <!-- <button class="btn mx-2" on:click={encrypt}>Encrypt</button> -->
 </div>

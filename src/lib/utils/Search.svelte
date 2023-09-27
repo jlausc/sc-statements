@@ -1,7 +1,8 @@
 <script lang="ts">
   import { FileState } from "./FileState";
   import { filter } from "../stores/FileData";
-  export let state: string;
+  import { state } from "../stores/UploadState";
+
   let searchInput: string;
   function clearFilter() {
     $filter = "";
@@ -17,14 +18,14 @@
   }
 </script>
 
-{#if state == FileState.waiting}
+{#if $state == FileState.waiting}
   <div />
-{:else if state == FileState.loaded}
+{:else if $state == FileState.loaded}
   <div class="place-self-center flex px-5">
     <input
       type="text"
-      placeholder="Enter FDIC Cert"
-      class="input input-bordered w-full max-w-xs mx-3"
+      placeholder="Enter Cert or Bank Acct #"
+      class="input input-bordered w-full max-w-s mx-3"
       on:keydown={handleKey}
       bind:value={searchInput}
     />

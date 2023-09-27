@@ -52,7 +52,7 @@
 
 <div>
   <div
-    class="border-solid border-2 border-black-600 min-w-full w-full mx-4 rounded-lg"
+    class="border-solid border-2 border-black-600 min-w-full w-full mx-4 rounded-lg capitalize"
   >
     <div class="row-header flex">
       {#each headers as header}
@@ -62,6 +62,7 @@
       {/each}
       <button on:click={downloadCsv}>
         <a bind:this={dlEl} />
+
         <svg
           width="24"
           height="24"
@@ -98,7 +99,7 @@
             </div>
           </div>
           <button
-            class="w-1/12 content-center"
+            class="w-1/12 content-center flex"
             on:click={() => records.removeIndex(idx)}
           >
             <svg

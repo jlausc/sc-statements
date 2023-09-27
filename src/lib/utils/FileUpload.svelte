@@ -3,24 +3,39 @@
   import { handleError } from "./errors/handleError";
   import { getFileExtension, parseCSV } from "./parse/uploads";
   import { output, headers } from "../stores/FileData";
+  import { unwantedHeaders } from "./unwantedHeaders";
+  import { state } from "../stores/UploadState";
 
-  export let state;
-
-  let data = localStorage.output || "[{}]";
+  let data = $output.length ? JSON.stringify($output) : "[{}]";
   let allowedFormats = [".csv", ".json"];
+
+  function parseHeaders(orig: any) {
+    const origHeaders = Object.keys(orig);
+
+    let result: string[] = [];
+
+    origHeaders.forEach((header) => {
+      if (unwantedHeaders.includes(header)) return;
+
+      result.push(header);
+    });
+    return result;
+  }
 
   $: {
     try {
       $output = JSON.parse(data);
-      $headers = Object.keys($output[0]);
+      // $headers = Object.keys($output[0]);
+      $headers = parseHeaders($output[0]);
+
       if ($output.length && $headers.length) {
         // localStorage.headers = JSON.stringify($headers);
         // localStorage.output = JSON.stringify($output);
-        state = FileState.loaded;
+        $state = FileState.loaded;
       }
     } catch (err) {
-      state = FileState.waiting;
-      handleError(undefined, "Failed to parse JSON. Please check the file.");
+      $state = FileState.waiting;
+      handleError(undefined, "Failed to parse. Please check the file.");
     }
   }
 
@@ -29,9 +44,9 @@
   ) {
     try {
       handleFileInput(ev);
-      state = FileState.loading;
+      $state = FileState.loading;
     } catch (err) {
-      state = FileState.waiting;
+      $state = FileState.waiting;
       throw err;
     }
   }
@@ -84,6 +99,9 @@
   }
 </script>
 
+<label class="label min-w-fit">
+  <span class="label-text px-3">Upload File</span>
+</label>
 <div class="form-control w-full max-w-xs place-self-center">
   <input
     type="file"

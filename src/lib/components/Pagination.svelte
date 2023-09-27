@@ -1,8 +1,7 @@
 <script lang="ts">
   import { cursor, output, pageSize, totalPages } from "../stores/FileData";
+  import { state } from "../stores/UploadState";
   import { FileState } from "../utils/FileState";
-
-  export let state: string;
 
   $: {
     $totalPages = Math.floor($output.length / $pageSize);
@@ -25,9 +24,9 @@
   }
 </script>
 
-{#if state == FileState.waiting}
+{#if $state == FileState.waiting}
   <div />
-{:else if state == FileState.loaded}
+{:else if $state == FileState.loaded}
   <div class="join flex justify-center px-5">
     <button class="join-item btn" on:click={goPrev}>«</button>
     <button class="join-item btn">{$cursor}</button>

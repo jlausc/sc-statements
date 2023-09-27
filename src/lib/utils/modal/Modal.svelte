@@ -1,8 +1,11 @@
 <script lang="ts">
   import { clickOutside } from "../clickOutside";
+  import BankDetailModal from "./BankDetailModal.svelte";
   export let show = false;
   export let key: string;
   export let data: string;
+
+  export let row: any;
 
   function handleClickOutside() {
     show = false;
@@ -15,8 +18,12 @@
     use:clickOutside
     on:click_outside={handleClickOutside}
   >
-    <div class="container">
-      {data}
+    <div>
+      {#if row}
+        <BankDetailModal bankDetail={row} />
+      {:else}
+        {data}
+      {/if}
     </div>
   </div>
 {/if}
@@ -26,16 +33,13 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    translate: -50% -50%;
-    width: 600px;
-    height: 600px;
+    translate: -50% -45%;
+    width: min(800px, 80vh);
+    height: min(850px, 80vh);
     z-index: 10;
     border: 5px solid black;
     border-radius: 15px;
     background: white;
-  }
-  .container {
-    position: relative;
-    text-wrap: wrap;
+    overflow: auto;
   }
 </style>
